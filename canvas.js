@@ -21,6 +21,16 @@ const cerdo = {
    isVisible:false
 };
 
+let xmove = 250;
+let ymove = 250;
+
+const teclas = {
+	UP : 38,
+	DOWN : 40,
+	LEFT : 37,
+	RIGHT : 39
+}
+
 fondo.image = new Image();
 fondo.image.src = fondo.url;
 
@@ -54,13 +64,11 @@ cargarCerdo = () => {
 };
 
 dibujar = () => {
-	if (fondo.isVisible) {
-		papel.drawImage(fondo.image,0,0);
-	}
+	fondo.isVisible && papel.drawImage(fondo.image,0,0);
+	
 
 	if(vaca.isVisible){
-
-		for (let i = 0; i <= numAleatorio(5,100); i++) {
+		for (let i = 0; i <= numAleatorio(5,50); i++) {
 			let x = numAleatorio(0,7);
 			let y = numAleatorio(0,7);
 			let x1 = x * 60;
@@ -71,8 +79,20 @@ dibujar = () => {
 	}
 
 	if(pollo.isVisible){
-		papel.drawImage(pollo.image,10,300);
+		for (let i = 0; i <= numAleatorio(5,100); i++) {
+			let x = numAleatorio(0,7);
+			let y = numAleatorio(0,7);
+			let x1 = x * 60;
+			let y1 = y * 60;
+
+			papel.drawImage(pollo.image,x1,y1);
+		}
 	}
+
+	pollo.isVisible && papel.drawImage(pollo.image,10,300);
+
+	cerdo.isVisible && papel.drawImage(cerdo.image,xmove,ymove);
+	
 }
 
 fondo.image.addEventListener("load", cargarFondo);
@@ -83,39 +103,29 @@ cerdo.image.addEventListener("load", cargarCerdo);
 numAleatorio = (min,max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 /********************************* EVENTS KEYDOWN **********************************************/
-let xi = 250;
-	let yi = 250;
-
-const teclas = {
-	UP : 38,
-	DOWN : 40,
-	LEFT : 37,
-	RIGHT : 39
-}
 
 cargaImage = (tecla) => {
+	
 	let movimiento = 10;
+
+	if(cerdo.isVisible){
 		switch(tecla){
-			case "UP":  if(cerdo.isVisible){
-						    papel.drawImage(cerdo.image,xi,yi - movimiento);
-						  	yi -= movimiento;
-						}
+			case "UP": dibujar();
+						ymove -= movimiento;
 						break;
-			case "DOWN":  if(cerdo.isVisible){
-						    papel.drawImage(cerdo.image,xi,yi + movimiento);
-						    yi += movimiento;
-						}
+
+			case "DOWN": dibujar();
+						 ymove += movimiento;
 						break;
-			case "LEFT":  if(cerdo.isVisible){
-						    papel.drawImage(cerdo.image,xi - movimiento,yi);
-						    xi -= movimiento;
-						}
+
+			case "LEFT": dibujar();
+						  xmove -= movimiento;
 						break;
-			case "RIGHT":  if(cerdo.isVisible){
-						    papel.drawImage(cerdo.image,xi + movimiento,yi);
-						    xi += movimiento;
-						}
+
+			case "RIGHT": dibujar();
+						  xmove += movimiento;
 						break;
+			}
 		}
 };
 
@@ -134,8 +144,6 @@ eventMovement = (event) => {
 
 let tecla = addEventListener("keydown", eventMovement);
 
-
-/*** GENERAR CANTIDAD ALEATORIA DE LOS OTROS ANIMASLES , HACER QUE EL CERDO SE MUEVA CON LAS TECLAS DE FLECHAS ***/
 
 
 
